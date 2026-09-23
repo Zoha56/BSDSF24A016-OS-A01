@@ -22,20 +22,24 @@ Compilation is managed directly through explicit target rules without wildcard v
 3. `main.c` is compiled to `obj/main.o`.
 4. All object files are directly linked together using `gcc` into the target binary `bin/client`.
 
----
 
----
-
-## Feature 3: Static Library Compilation
+## Feature 3: Static Library Compilation & Analysis
 
 ### Overview
 Feature 3 bundles the modular utility object files (`mystrfunctions.o`, `myfilefunctions.o`) into a single static library archive named `libmyutils.a`. The client application is then linked against this archive to produce the static executable `bin/client_static`.
 
 ### Build Commands
-1. **Archive creation:** `ar rcs lib/libmyutils.a obj/mystrfunctions.o obj/myfilefunctions.o`
-2. **Linking step:** `gcc obj/main.o -Llib -lmyutils -o bin/client_static`
+1. **Archive Creation:**  
+   `ar rcs lib/libmyutils.a obj/mystrfunctions.o obj/myfilefunctions.o`
+2. **Linking Step:**  
+   `gcc obj/main.o -Llib -lmyutils -o bin/client_static`
 
-### Key Observations & Symbol Inspection
-- Running `ar -t lib/libmyutils.a` confirms that `mystrfunctions.o` and `myfilefunctions.o` are properly archived inside the library file.
-- Inspecting symbols via `nm` displays exported utility function symbols directly embedded in the static build archive.
-- The compiled static binary `client_static` includes all linked code routines directly inside the executable binary, making it self-contained without requiring separate external library files at runtime.
+---
+
+## Feature 3 Analysis & Report Questions
+
+### 1. Makefile Comparison (Feature 2 vs. Feature 3)
+* **Part 2 (Multi-file direct linking):** Links raw object files directly into the target binary using `gcc`:
+  ```makefile
+  bin/client: obj/mystrfunctions.o obj/myfilefunctions.o obj/main.o
+      gcc obj/mystrfunctions.o obj/myfilefunctions.o obj/main.o -o bin/client
