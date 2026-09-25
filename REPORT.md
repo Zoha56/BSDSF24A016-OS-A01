@@ -71,3 +71,38 @@ Feature 4 compiles position-independent object code (`-fPIC`) to build a shared 
 * **`LD_LIBRARY_PATH`:** An environment variable used to specify custom search directories for shared libraries at runtime.
 * **`-Wl,-rpath`:** Embeds a runtime library search path directly inside the executable binary ELF header.
 * **Why `-Wl,-rpath='$ORIGIN/../lib'` was used:** By setting the runtime path relative to `$ORIGIN` (the folder where the executable lives), `client_dynamic` can automatically locate `libmyutils.so` in `../lib` without requiring manual environment variable configuration (`LD_LIBRARY_PATH`) by the user.
+
+---
+
+## Feature 5: Creating and Accessing Custom Man Pages
+
+### Overview
+Feature 5 creates standard Linux manual pages in `groff`/`troff` format for custom string (`mystrfunctions.3`) and file (`myfilefunctions.3`) utility functions under Section 3 (Library Functions). An `install` target was added to the `Makefile` to automate system-wide installation of the binary executable to `/usr/local/bin` and manual pages to `/usr/local/share/man/man3/`.
+
+### Key Commands
+1. **Local Preview:** `man -l man/man3/mystrfunctions.3`
+2. **System Installation:** `sudo make install`
+3. **Global Execution & Access:** `client` and `man 3 mystrfunctions`
+4. **System Uninstallation:** `sudo make uninstall`
+
+---
+
+## Feature 5 Analysis & Report Questions
+
+### 1. Section Numbers in Man Pages
+* **Section 1:** User Commands and Executables (e.g., `ls`, `grep`).
+* **Section 2:** System Calls provided by the Linux Kernel (e.g., `open`, `fork`).
+* **Section 3:** Library Functions provided by C/C++ libraries (e.g., `strcpy`, `printf`).
+* **Why Section 3 was chosen:** `mystrfunctions` and `myfilefunctions` are utility library routines called inside standard C programs, making Section 3 the appropriate standard section.
+
+### 2. Formatting Language
+* Man pages are written using `groff`/`troff` macro formatting commands:
+  - `.TH`: Title Header (defines page name, section number, date, and manual title).
+  - `.SH`: Section Header (defines structural sections like NAME, SYNOPSIS, DESCRIPTION, AUTHOR).
+  - `.B` / `.I`: Bold / Italic text styling for function signatures and parameters.
+  - `.TP`: Tagged Paragraph (used for itemized function breakdowns).
+
+### 3. Installation Directory and `sudo make install`
+* The `install` target copies the compiled binary `bin/client` into `/usr/local/bin` and man pages into `/usr/local/share/man/man3/`.
+* Writing files into `/usr/local/` requires elevated system privileges, which is why `sudo make install` is necessary.
+* After running `mandb`, the system updates its database index so users can access `man 3 mystrfunctions` and execute `client` from any terminal path without specifying relative directory paths.
