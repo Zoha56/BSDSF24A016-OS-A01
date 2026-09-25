@@ -1,0 +1,21 @@
+.TH MYFILEFUNCTIONS 3 "September 2026" "v0.4.1" "MyUtils Library Manual"
+.SH NAME
+myfilefunctions \- File processing utility functions
+.SH SYNOPSIS
+.B #include "myfilefunctions.h"
+.sp
+.BI "int wordCount(FILE *" file ", int *" lines ", int *" words ", int *" chars ");"
+.br
+.BI "int mygrep(FILE *" fp ", const char *" search_str ", char ***" matches ");"
+.SH DESCRIPTION
+The
+.B myfilefunctions
+module processes files to compute line/word counts and locate target search strings.
+.TP
+.BR wordCount ()
+Calculates lines, words, and character counts inside an open file stream.
+.TP
+.BR mygrep ()
+Searches for \fIsearch_str\fP inside \fIfp\fP and returns matching strings in \fImatches\fP.
+.SH AUTHOR
+Zoha56 <BSDSF24A016@pucit.edu.pk>

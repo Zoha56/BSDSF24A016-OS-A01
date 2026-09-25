@@ -1,0 +1,25 @@
+.TH MYSTRFUNCTIONS 3 "September 2026" "v0.4.1" "MyUtils Library Manual"
+.SH NAME
+mystrfunctions \- String manipulation utility functions
+.SH SYNOPSIS
+.B #include "mystrfunctions.h"
+.sp
+.BI "int mystrlen(const char *" s ");"
+.br
+.BI "int mystrcpy(char *" dest ", const char *" src ");"
+.br
+.BI "int mystrncpy(char *" dest ", const char *" src ", int " n ");"
+.br
+.BI "int mystrcat(char *" dest ", const char *" src ");"
+.SH DESCRIPTION
+The
+.B mystrfunctions
+module provides standard custom string operations.
+.TP
+.BR mystrlen ()
+Computes the length of string \fIs\fP excluding the null terminator.
+.TP
+.BR mystrcat ()
+Appends string \fIsrc\fP to \fIdest\fP.
+.SH AUTHOR
+Zoha56 <BSDSF24A016@pucit.edu.pk>

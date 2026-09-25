@@ -33,8 +33,6 @@ bin/client_static: obj/main.o lib/libmyutils.a
 # --------------------------------------------------
 # FEATURE-4: Dynamic Library (libmyutils.so)
 # --------------------------------------------------
-
-# 1. Compile PIC object files
 obj/mystrfunctions_pic.o: src/mystrfunctions.c include/mystrfunctions.h
 	mkdir -p obj
 	gcc -fPIC -Iinclude -c src/mystrfunctions.c -o obj/mystrfunctions_pic.o
@@ -43,15 +41,29 @@ obj/myfilefunctions_pic.o: src/myfilefunctions.c include/myfilefunctions.h
 	mkdir -p obj
 	gcc -fPIC -Iinclude -c src/myfilefunctions.c -o obj/myfilefunctions_pic.o
 
-# 2. Build shared library
 lib/libmyutils.so: obj/mystrfunctions_pic.o obj/myfilefunctions_pic.o
 	mkdir -p lib
 	gcc -shared obj/mystrfunctions_pic.o obj/myfilefunctions_pic.o -o lib/libmyutils.so
 
-# 3. Link main.o with shared library using rpath
 bin/client_dynamic: obj/main.o lib/libmyutils.so
 	mkdir -p bin
 	gcc obj/main.o -Llib -lmyutils -Wl,-rpath='$$ORIGIN/../lib' -o bin/client_dynamic
+
+
+# --------------------------------------------------
+# FEATURE-5: System Install and Man Pages
+# --------------------------------------------------
+install: bin/client
+	mkdir -p /usr/local/bin
+	mkdir -p /usr/local/share/man/man3
+	cp bin/client /usr/local/bin/client
+	cp man/man3/*.3 /usr/local/share/man/man3/
+	mandb /usr/local/share/man 2>/dev/null || true
+
+uninstall:
+	rm -f /usr/local/bin/client
+	rm -f /usr/local/share/man/man3/mystrfunctions.3
+	rm -f /usr/local/share/man/man3/myfilefunctions.3
 
 
 # --------------------------------------------------
